@@ -1,0 +1,1239 @@
+{
+  "info": {
+    "name": "Regex Engine",
+    "description": "Noma home assignment - regex scan engine. Run the app (./mvnw spring-boot:run) and create the fixtures in ~/scan-files for the FILE requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8087/anomaly-detector"
+    }
+  ],
+  "item": [
+    {
+      "name": "1 - Websites",
+      "item": [
+        {
+          "name": "Hacker News - all hyperlinks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://news.ycombinator.com\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"<a\\\\s+[^>]*href=\\\"[^\\\"]+\\\"\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Wikipedia - external links (custom User-Agent)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://en.wikipedia.org/wiki/Regular_expression\",\n    \"headers\": {\n      \"User-Agent\": \"regex-engine-test/1.0\"\n    }\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"href=\\\"https?://[^\\\"]+\\\"\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "example.com - unquoted href",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://example.com\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"<a\\\\s+[^>]*href=[^\\\\s>]+\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Redirect http -> https (github.com)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"http://github.com\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"<title>[^<]*</title>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - Source code",
+      "item": [
+        {
+          "name": "Python over HTTP - psf/requests",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://raw.githubusercontent.com/psf/requests/main/src/requests/sessions.py\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"^[ \\\\t]*(?:import|from)[ \\\\t]+[\\\\w.]+\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Go over HTTP - gin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://raw.githubusercontent.com/gin-gonic/gin/master/gin.go\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"^\\\\s*\\\"[\\\\w./-]+\\\"$\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "JavaScript over HTTP - express",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://raw.githubusercontent.com/expressjs/express/master/lib/express.js\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"require\\\\([^)]+\\\\)\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "HTTP with custom headers (httpbin echoes them)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://httpbin.org/headers\",\n    \"headers\": {\n      \"Authorization\": \"Bearer <TOKEN>\",\n      \"X-Custom-Test\": \"hello-noma\"\n    }\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"\\\"Authorization\\\": \\\"[^\\\"]+\\\"\",\n    \"\\\"X-Custom-Test\\\": \\\"[^\\\"]+\\\"\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": "httpbin returns the request headers in the body, proving they were sent. Note: httpbin strips X-Forwarded-For itself."
+          }
+        },
+        {
+          "name": "File - latin-1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"latin1.py\",\n    \"encoding\": \"latin-1\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"^[ \\\\t]*(?:import|from)[ \\\\t]+[\\\\w.]+\",\n    \"caf.\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": "Requires ~/scan-files/latin1.py"
+          }
+        },
+        {
+          "name": "File - utf-16",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"utf16.py\",\n    \"encoding\": \"utf-16\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"^[ \\\\t]*(?:import|from)[ \\\\t]+[\\\\w.]+\",\n    \"caf.\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": "Requires ~/scan-files/utf16.py"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - Notebooks",
+      "item": [
+        {
+          "name": "Notebook over HTTP - cell sources only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://raw.githubusercontent.com/jakevdp/PythonDataScienceHandbook/master/notebooks/02.01-Understanding-Data-Types.ipynb\"\n  },\n  \"contentType\": \"NOTEBOOK\",\n  \"patterns\": [\n    \"^[ \\\\t]*(?:import|from)[ \\\\t]+[\\\\w.]+\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Same notebook as RAW - 0 matches (why the extractor matters)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://raw.githubusercontent.com/jakevdp/PythonDataScienceHandbook/master/notebooks/02.01-Understanding-Data-Types.ipynb\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"^[ \\\\t]*(?:import|from)[ \\\\t]+[\\\\w.]+\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": "Inside the JSON every line is quoted, so ^ never matches - compare with the NOTEBOOK request."
+          }
+        },
+        {
+          "name": "Jupyter docs notebook over HTTP",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://raw.githubusercontent.com/jupyter/notebook/main/docs/source/examples/Notebook/Running%20Code.ipynb\"\n  },\n  \"contentType\": \"NOTEBOOK\",\n  \"patterns\": [\n    \"^[ \\\\t]*(?:import|from)[ \\\\t]+[\\\\w.]+\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Notebook from file - outputs ignored",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"sample.ipynb\"\n  },\n  \"contentType\": \"NOTEBOOK\",\n  \"patterns\": [\n    \"^[ \\\\t]*(?:import|from)[ \\\\t]+[\\\\w.]+\",\n    \"fake_from_output\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": "Requires ~/scan-files/sample.ipynb. 'fake_from_output' appears only in outputs, so it must return 0 matches."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 - Errors & security",
+      "item": [
+        {
+          "name": "Invalid regex -> 400 INVALID_PATTERN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"latin1.py\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"[a-\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Validation - missing path & patterns -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Unknown source type -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"S3\",\n    \"url\": \"x\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "HTML as NOTEBOOK -> 400 INVALID_NOTEBOOK",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://example.com\"\n  },\n  \"contentType\": \"NOTEBOOK\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Unsupported encoding -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"latin1.py\",\n    \"encoding\": \"klingon\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Too many patterns (21) -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"latin1.py\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\",\n    \"a\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Path traversal -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"../.ssh/id_rsa\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Absolute path -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"/etc/passwd\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"root\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "file:// scheme (SSRF) -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"file:///etc/passwd\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"root\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Missing file -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"FILE\",\n    \"path\": \"nope.py\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Content > 5MB -> 413",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 413', () => pm.response.to.have.status(413));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://proof.ovh.net/files/10Mb.dat\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Upstream 404 -> 502",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 502', () => pm.response.to.have.status(502));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://raw.githubusercontent.com/psf/requests/main/nope.py\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Unknown host -> 502",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 502', () => pm.response.to.have.status(502));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://no-such-host-xyz123.invalid\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Read timeout (15s delay, 10s limit) -> 502",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 502', () => pm.response.to.have.status(502));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source\": {\n    \"type\": \"HTTP\",\n    \"url\": \"https://httpbin.org/delay/15\"\n  },\n  \"contentType\": \"RAW\",\n  \"patterns\": [\n    \"x\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/scan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "scan"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    }
+  ]
+}
