@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // AppException is thrown by the service layer
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ErrDTO> handleAppException(AppException e) {
         log.warn("App exception [{}]: {}", e.getType(), e.getMessage(), e);
         return respond(new ErrDTO(e.getType(), e.getMessage()));
     }
 
+    // Jackson failed to convert JSON → ScanRequest
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrDTO> handleValidation(MethodArgumentNotValidException e) {
         String details = e.getBindingResult().getFieldErrors().stream()
@@ -31,12 +33,14 @@ public class GlobalExceptionHandler {
         return respond(ErrDTO.of(ErrorType.VALIDATION_FAILED, details));
     }
 
+    // @Valid checks the annotations on the object
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrDTO> handleUnreadable(HttpMessageNotReadableException e) {
         log.warn("Malformed request body: {}", e.getMessage());
         return respond(ErrDTO.of(ErrorType.MALFORMED_REQUEST));
     }
 
+    // General exception
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrDTO> handleUnexpected(Exception e) {
         log.error("Unexpected exception", e);

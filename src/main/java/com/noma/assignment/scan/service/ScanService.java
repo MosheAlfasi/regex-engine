@@ -29,9 +29,13 @@ public class ScanService {
 
     public ScanResponse scan(ScanRequest request) {
         List<Pattern> patterns = regexMatcher.compile(request.patterns());
+
+        // Q
         String content = fetch(request.source());
+
         List<String> chunks = extract(request.contentType(), content);
 
+        // Q
         return new ScanResponse(regexMatcher.match(patterns, chunks));
     }
 
